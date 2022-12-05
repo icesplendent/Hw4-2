@@ -10,9 +10,11 @@
 
 #### 5. set up your own mbed_app.json
 
-#### 6. compile and run this program
+#### 6. Start the Mosquitto service
 
-#### 7. Run `python3 mqtt_client.py`
+#### 7. compile and run this program
+
+#### 8. Run `python3 mqtt_client.py`
 
 ## Results
 
