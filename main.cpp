@@ -50,29 +50,28 @@ void messageArrived(MQTT::MessageData& md) {
     ++arrivedcount;
 }
 
-// void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client) {
-void publish_message() {
-    printf("---start---publish_message\n");
-    // message_num++;
-    // MQTT::Message message;
-    // char buff[100];
-    // // sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
-    // sprintf(buff, "%f/%f/%f\n", roll, pitch, yaw);
-    // message.qos = MQTT::QOS0;
-    // message.retained = false;
-    // message.dup = false;
-    // message.payload = (void*)buff;
-    // message.payloadlen = strlen(buff) + 1;
-    // int rc = client->publish(topic, message);
+void publish_message(MQTT::Client<MQTTNetwork, Countdown>* client) {
+    //   printf("---start---publish_message\n");
+    message_num++;
+    MQTT::Message message;
+    char buff[100];
+    // sprintf(buff, "QoS0 Hello, Python! #%d", message_num);
+    sprintf(buff, "%f/%f/%f\n", roll, pitch, yaw);
+    message.qos = MQTT::QOS0;
+    message.retained = false;
+    message.dup = false;
+    message.payload = (void*)buff;
+    message.payloadlen = strlen(buff) + 1;
+    int rc = client->publish(topic, message);
 
-    // printf("rc:  %d\r\n", rc);
-    // printf("Puslish message: %s\r\n", buff);
+    printf("rc:  %d\r\n", rc);
+    printf("Puslish message: %s\r\n", buff);
 }
 
 void close_mqtt() { closed = true; }
 
 void record(MQTT::Client<MQTTNetwork, Countdown>* client) {
-    printf("---start---record\n");
+    //   printf("---start---record\n");
 
     acc.GetAcceleromterSensor(Accel);
     acc.GetAcceleromterCalibratedData(Accel);
@@ -103,13 +102,13 @@ void record(MQTT::Client<MQTTNetwork, Countdown>* client) {
     // Use Acc data only
     roll = accAngleX;
     pitch = accAngleY;
-    mqtt_queue.event(&publish_message);
-    //   printf("%f/%f/%f\n", roll, pitch, yaw);
+    queue.call(&publish_message, client);
+    printf("%f/%f/%f\n", roll, pitch, yaw);
 
     // send row, pitch, yaw to MQTT
     //   mqtt_queue.event(&publish_message, client);
 
-    // ThisThread::sleep_for(10ms);
+    //   ThisThread::sleep_for(10ms);
 }
 
 void startRecord(MQTT::Client<MQTTNetwork, Countdown>* client) {
